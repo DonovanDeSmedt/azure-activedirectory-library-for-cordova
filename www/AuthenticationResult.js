@@ -16,6 +16,7 @@ function AuthenticationResult(authResult) {
     this.status = authResult.status;
     this.statusCode = authResult.statusCode;
     this.tenantId = authResult.tenantId;
+    this.refreshToken = authResult.refreshToken;
 
     var jwtToken = authResult.idToken || authResult.accessToken;
     this.userInfo = null;
