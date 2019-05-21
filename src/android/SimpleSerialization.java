@@ -90,6 +90,7 @@ class SimpleSerialization {
         result.put("resource", item.getResource());
         result.put("tenantId", item.getTenantId());
         result.put("idToken", item.getRawIdToken());
+        result.put("refreshToken", item.getRefreshToken());
 
         JSONObject userInfo = null;
         try {
