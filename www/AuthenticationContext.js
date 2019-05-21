@@ -23,16 +23,15 @@ var TokenCache = require('./TokenCache');
  * @returns {Object}  Newly created authentication context.
  */
 function AuthenticationContext(authority, validateAuthority) {
+  checkArgs('s*', 'AuthenticationContext', arguments);
 
-    checkArgs('s*', 'AuthenticationContext', arguments);
+  if (validateAuthority !== false) {
+    validateAuthority = true;
+  }
 
-    if (validateAuthority !== false) {
-        validateAuthority = true;
-    }
-
-    this.authority = authority;
-    this.validateAuthority = validateAuthority;
-    this.tokenCache = new TokenCache(this);
+  this.authority = authority;
+  this.validateAuthority = validateAuthority;
+  this.tokenCache = new TokenCache(this);
 }
 
 /**
@@ -44,23 +43,25 @@ function AuthenticationContext(authority, validateAuthority) {
  *
  * @returns {Promise}  Promise either fulfilled with newly created authentication context or rejected with error
  */
-AuthenticationContext.createAsync = function (authority, validateAuthority) {
+AuthenticationContext.createAsync = function(authority, validateAuthority) {
+  checkArgs('s*', 'AuthenticationContext.createAsync', arguments);
 
-    checkArgs('s*', 'AuthenticationContext.createAsync', arguments);
+  var d = new Deferred();
 
-    var d = new Deferred();
+  if (validateAuthority !== false) {
+    validateAuthority = true;
+  }
 
-    if (validateAuthority !== false) {
-        validateAuthority = true;
+  bridge.executeNativeMethod('createAsync', [authority, validateAuthority]).then(
+    function() {
+      d.resolve(new AuthenticationContext(authority, validateAuthority));
+    },
+    function(err) {
+      d.reject(err);
     }
+  );
 
-    bridge.executeNativeMethod('createAsync', [authority, validateAuthority]).then(function () {
-        d.resolve(new AuthenticationContext(authority, validateAuthority));
-    }, function(err) {
-        d.reject(err);
-    });
-
-    return d;
+  return d;
 };
 
 /**
@@ -76,21 +77,37 @@ AuthenticationContext.createAsync = function (authority, validateAuthority) {
  *
  * @returns {Promise} Promise either fulfilled with AuthenticationResult object or rejected with error
  */
-AuthenticationContext.prototype.acquireTokenAsync = function (resourceUrl, clientId, redirectUrl, userId, extraQueryParameters) {
+AuthenticationContext.prototype.acquireTokenAsync = function(
+  resourceUrl,
+  clientId,
+  redirectUrl,
+  userId,
+  extraQueryParameters
+) {
+  checkArgs('sssSS', 'AuthenticationContext.acquireTokenAsync', arguments);
 
-    checkArgs('sssSS', 'AuthenticationContext.acquireTokenAsync', arguments);
+  var d = new Deferred();
 
-    var d = new Deferred();
-
-    bridge.executeNativeMethod('acquireTokenAsync', [this.authority, this.validateAuthority, resourceUrl, clientId, redirectUrl,
-        userId, extraQueryParameters])
-    .then(function(authResult){
+  bridge
+    .executeNativeMethod('acquireTokenAsync', [
+      this.authority,
+      this.validateAuthority,
+      resourceUrl,
+      clientId,
+      redirectUrl,
+      userId,
+      extraQueryParameters
+    ])
+    .then(
+      function(authResult) {
         d.resolve(new AuthenticationResult(authResult));
-    }, function(err) {
+      },
+      function(err) {
         d.reject(err);
-    });
+      }
+    );
 
-    return d;
+  return d;
 };
 
 /**
@@ -104,20 +121,67 @@ AuthenticationContext.prototype.acquireTokenAsync = function (resourceUrl, clien
  *
  * @returns {Promise} Promise either fulfilled with AuthenticationResult object or rejected with error
  */
-AuthenticationContext.prototype.acquireTokenSilentAsync = function (resourceUrl, clientId, userId) {
+AuthenticationContext.prototype.acquireTokenSilentAsync = function(resourceUrl, clientId, userId) {
+  checkArgs('ssS', 'AuthenticationContext.acquireTokenSilentAsync', arguments);
 
-    checkArgs('ssS', 'AuthenticationContext.acquireTokenSilentAsync', arguments);
+  var d = new Deferred();
 
-    var d = new Deferred();
-
-    bridge.executeNativeMethod('acquireTokenSilentAsync', [this.authority, this.validateAuthority, resourceUrl, clientId, userId])
-    .then(function(authResult){
+  bridge
+    .executeNativeMethod('acquireTokenSilentAsync', [
+      this.authority,
+      this.validateAuthority,
+      resourceUrl,
+      clientId,
+      userId
+    ])
+    .then(
+      function(authResult) {
         d.resolve(new AuthenticationResult(authResult));
-    }, function(err) {
+      },
+      function(err) {
         d.reject(err);
-    });
+      }
+    );
 
-    return d;
+  return d;
+};
+
+/**
+ * Acquires token by using the refresh token. It checks the cache to return existing result
+ * if not expired. It tries to use refresh token if available. If it fails to get token without
+ * displaying UI it will fail. This method guarantees that no UI will be shown to user.
+ *
+ * @param   {String}  refreshToken Refresh token string
+ * @param   {String}  resourceUrl Resource identifier
+ * @param   {String}  clientId    Client (application) identifier
+ * @param   {String}  userId      User identifier (optional)
+ *
+ * @returns {Promise} Promise either fulfilled with AuthenticationResult object or rejected with error
+ */
+AuthenticationContext.prototype.acquireTokenByRefreshToken = function(refreshToken, resourceUrl, clientId, userId) {
+  checkArgs('ssS', 'AuthenticationContext.acquireTokenByRefreshToken', arguments);
+
+  var d = new Deferred();
+
+  bridge
+    .executeNativeMethod('acquireTokenByRefreshToken', [
+      this.authority,
+      this.validateAuthority,
+      resourceUrl,
+      clientId,
+      userId,
+      refreshToken
+    ])
+    .then(
+      function(authResult) {
+        d.resolve(new AuthenticationResult(authResult));
+      },
+      function(err) {
+        d.reject(err);
+      }
+    );
+
+  return d;
 };
 
 module.exports = AuthenticationContext;

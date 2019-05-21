@@ -127,6 +127,29 @@ public class CordovaAdalPlugin extends CordovaPlugin {
 
             return true;
 
+        } else if (action.equals("acquireTokenByRefreshToken")) {
+            final String authority = args.getString(0);
+            final boolean validateAuthority = args.optBoolean(1, true);
+            final String resourceUrl = args.getString(2);
+            final String clientId = args.getString(3);
+            final String refreshToken = args.getString(5);
+
+            // This is a workaround for Cordova bridge issue. When null us passed from JS side
+            // it is being translated to "null" string
+            final String userId = args.getString(4).equals("null") ? null : args.getString(4);
+
+            cordova.getThreadPool().execute(new Runnable() {
+                @Override
+                public void run() {
+                    acquireTokenByRefreshToken(
+                            refreshToken,
+                            authority,
+                            validateAuthority,
+                            resourceUrl, clientId, userId);
+                }
+            });
+
+            return true;
         } else if (action.equals("tokenCacheClear")){
 
             String authority = args.getString(0);
@@ -240,6 +263,35 @@ public class CordovaAdalPlugin extends CordovaPlugin {
         }
 
         authContext.acquireTokenSilentAsync(resourceUrl, clientId, userId, new DefaultAuthenticationCallback(callbackContext));
+    }
+
+    private acquireTokenByRefreshToken(String refreshToken, String authority, boolean validateAuthority, String resourceUrl, String clientId, String userId) {
+        final AuthenticationContext authContext;
+        try{
+            authContext = getOrCreateContext(authority, validateAuthority);
+
+            //  We should retrieve userId from broker cache since local is always empty
+            boolean useBroker = AuthenticationSettings.INSTANCE.getUseBroker();
+            if (useBroker) {
+                if (TextUtils.isEmpty(userId)) {
+                    // Get first user from account list
+                    userId = authContext.getBrokerUser();
+                }
+
+                for (UserInfo info: authContext.getBrokerUsers()) {
+                    if (info.getDisplayableId().equals(userId)) {
+                        userId = info.getUserId();
+                        break;
+                    }
+                }
+            }
+
+        } catch (Exception e) {
+            callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.ERROR, e.getMessage()));
+            return;
+        }
+
+        authContext.acquireTokenByRefreshToken(refreshToken, clientId, resourceUrl, new DefaultAuthenticationCallback(callbackContext));
     }
 
     private boolean readTokenCacheItems(String authority, boolean validateAuthority) throws JSONException {
