@@ -254,18 +254,15 @@ public class CordovaAdalPlugin extends CordovaPlugin {
 
         JSONArray result = new JSONArray();
         ITokenCacheStore cache = authContext.getCache();
-        RefreshItem refreshItem = authContext.getRefreshToken();
 
         if (cache instanceof ITokenStoreQuery) {
             Iterator<TokenCacheItem> cacheItems = ((ITokenStoreQuery)cache).getAll();
 
             while (cacheItems.hasNext()){
                 TokenCacheItem item = cacheItems.next();
-                JSONObject jsonObject = tokenItemToJSON(item);
-                jsonObject.put("refreshToken", refreshItem.mRefreshToken);
-                result.put(jsonObject);
+                result.put(tokenItemToJSON(item));
             }
-        }        
+        }
 
         callbackContext.sendPluginResult(new PluginResult(PluginResult.Status.OK, result));
 
