@@ -59,6 +59,7 @@ class SimpleSerialization {
         authResult.put("isMultipleResourceRefreshToken", authenticationResult.getIsMultiResourceRefreshToken());
         authResult.put("statusCode", authenticationResult.getStatus());
         authResult.put("tenantId", authenticationResult.getTenantId());
+        authResult.put("refreshToken", authenticationResult.getRefreshToken());
 
         JSONObject userInfo = null;
         try {
