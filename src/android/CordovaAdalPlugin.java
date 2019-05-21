@@ -265,7 +265,7 @@ public class CordovaAdalPlugin extends CordovaPlugin {
         authContext.acquireTokenSilentAsync(resourceUrl, clientId, userId, new DefaultAuthenticationCallback(callbackContext));
     }
 
-    private acquireTokenByRefreshToken(String refreshToken, String authority, boolean validateAuthority, String resourceUrl, String clientId, String userId) {
+    private void acquireTokenByRefreshToken(String refreshToken, String authority, boolean validateAuthority, String resourceUrl, String clientId, String userId) {
         final AuthenticationContext authContext;
         try{
             authContext = getOrCreateContext(authority, validateAuthority);
