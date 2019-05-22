@@ -1,16 +1,12 @@
 allprojects {
-    repositories {
-        maven { url "https://jitpack.io" }
-    }
+ repositories {
+    jcenter()
+    maven { url "https://jitpack.io" }
+ }
 }
-maven { 
-    name "jitpack"
-    url "https://jitpack.io" 
-}
-
 
 dependencies {
-    implementation 'com.github.DonovanDeSmedt:adal-android:master-SNAPSHOT'
+    compile 'com.github.DonovanDeSmedt:adal-android:1.0.0'
 }
 
 
