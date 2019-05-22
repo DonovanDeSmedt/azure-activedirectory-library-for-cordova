@@ -3,7 +3,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.DonovanDeSmedt:adal-android:1671eb1'
+    compile 'com.github.DonovanDeSmedt:master-SNAPSHOT'
 }
 
 
