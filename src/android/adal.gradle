@@ -3,7 +3,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.DonovanDeSmedt:adal-android:fix-token-broker-response'
+    compile 'com.github.DonovanDeSmedt:adal-android:1671eb1'
 }
 
 
