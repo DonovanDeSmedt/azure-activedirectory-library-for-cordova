@@ -6,7 +6,7 @@ allprojects {
 }
 
 dependencies {
-    implementation 'com.github.DonovanDeSmedt:adal-android:1.0.4'
+    implementation 'com.github.DonovanDeSmedt:adal-android:1.0.5'
 }
 
 
