@@ -1,6 +1,11 @@
-dependencies {
-    compile('com.microsoft.aad:adal:1.12.0') {}
+repositories {
+    maven { url "https://jitpack.io" }
 }
+
+dependencies {
+    compile 'com.github.DonovanDeSmedt:adal-android'
+}
+
 
 android {
     packagingOptions {
