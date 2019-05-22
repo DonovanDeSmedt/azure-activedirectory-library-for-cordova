@@ -3,7 +3,7 @@ repositories {
 }
 
 dependencies {
-    compile 'com.github.DonovanDeSmedt:adal-android'
+    compile 'com.github.DonovanDeSmedt:adal-android:master'
 }
 
 
