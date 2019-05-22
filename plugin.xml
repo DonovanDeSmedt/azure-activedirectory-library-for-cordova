@@ -61,8 +61,8 @@
             </activity>
         </config-file>
 
-        <!-- <framework src="src/android/adal.gradle" custom="true" type="gradleReference" /> -->
-        <framework src="src/android/build.gradle" custom="true" type="gradleReference" />
+        <framework src="src/android/adal.gradle" custom="true" type="gradleReference" />
+        <!-- <framework src="src/android/build.gradle" custom="true" type="gradleReference" /> -->
 
 
         <source-file src="src/android/CordovaAdalPlugin.java" target-dir="src/com/microsoft/aad/adal" />

@@ -1,7 +1,23 @@
-repositories {
-    maven { url "https://jitpack.io" }
- }
+buildscript {
 
- dependencies {
-    compile 'com.github.DonovanDeSmedt:adal-android:1.0.0'
+    repositories {
+        jcenter()
+    }
+
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:3.4.1'
+        implementation 'com.github.DonovanDeSmedt:adal-android:1.0.4'
+    }
 }
+
+allprojects {
+   repositories {
+       jcenter()
+       maven { url 'https://jitpack.io' }
+   }
+}
+
+dependencies {
+	        implementation 'com.github.DonovanDeSmedt:adal-android:1.0.4'
+	}
