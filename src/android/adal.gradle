@@ -1,9 +1,10 @@
 repositories {
+    jcenter()
     maven { url "https://jitpack.io" }
 }
 
 dependencies {
-    compile 'com.github.DonovanDeSmedt:master-SNAPSHOT'
+    compile 'com.github.DonovanDeSmedt:adal-android:master-SNAPSHOT'
 }
 
 
